@@ -5,11 +5,11 @@ import { useForm } from "react-hook-form";
 import useAuth from "../Hooks/useAuth";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
-import SocialLogin from "../Components/SocialLogin";
 import { Select, Button } from "antd";
 import img from "../assets/register.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import Loading from "../Components/Loading";
+import Loading from "../Component/Loading";
+import SocialLogin from "../Component/SocialLogin";
 
 const Register = () => {
   const { registerUser, profileUpdate, loader, setLoader } = useAuth();

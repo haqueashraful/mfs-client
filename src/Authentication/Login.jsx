@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { Button } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import useAuth from "../Hooks/useAuth";
-import SocialLogin from "../Components/SocialLogin";
+import SocialLogin from "../Component/SocialLogin";
 import img from '../assets/login.svg'
 
 const Login = () => {
