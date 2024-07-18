@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import useAuth from "../Hooks/useAuth";
 import useAxiosPublic from "../Hooks/useAxiosPublic";
 import Swal from "sweetalert2";
-import { Select, Button } from "antd";
+import { Button } from "antd";
 import img from "../assets/register.svg";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import Loading from "../Component/Loading";
@@ -37,7 +37,8 @@ const Register = () => {
         formData
       );
       const imageUrl = imgBBResponse.data.data.url;
-      await registerUser(data.email, data.password).then((result) => {
+
+      await registerUser(data.email, data.pin).then((result) => {
         setLoader(false);
       });
       await profileUpdate(data.name, imageUrl);
@@ -46,10 +47,9 @@ const Register = () => {
         .post("/users", {
           name: data.name,
           email: data.email,
-          bank_account_no: data.bankAccountNo,
-          salary: data.salary,
-          role: data.role,
-          designation: data.designation,
+          pin: data.pin,
+          mobileNumber: data.mobileNumber,
+          status: "pending",
           photo: imageUrl,
         })
         .then((res) => {
@@ -103,8 +103,8 @@ const Register = () => {
               )}
             </div>
 
-            {/* Image */}
-            <div>
+            {/* Photo */}
+            {/* <div>
               <label className="block text-lg" htmlFor="photo">
                 Photo
               </label>
@@ -117,7 +117,7 @@ const Register = () => {
               {errors.photo && (
                 <span className="text-red-600">Photo is required</span>
               )}
-            </div>
+            </div> */}
 
             {/* Email */}
             <div>
@@ -136,28 +136,40 @@ const Register = () => {
               )}
             </div>
 
-            {/* Password */}
+            {/* Mobile Number */}
             <div>
-              <label className="block text-lg" htmlFor="password">
-                Password
+              <label className="block text-lg" htmlFor="mobileNumber">
+                Mobile Number
+              </label>
+              <input
+                {...register("mobileNumber", { required: true })}
+                type="text"
+                id="mobileNumber"
+                placeholder="Mobile Number"
+                className="w-full p-2 border rounded-md"
+              />
+              {errors.mobileNumber && (
+                <span className="text-red-600">Mobile Number is required</span>
+              )}
+            </div>
+
+            {/* PIN */}
+            <div>
+              <label className="block text-lg" htmlFor="pin">
+                PIN
               </label>
               <div className="relative">
                 <input
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters",
-                    },
+                  {...register("pin", {
+                    required: "PIN is required",
                     pattern: {
-                      value: /^(?=.*[A-Z])(?=.*[!@#$%^&*])/,
-                      message:
-                        "Password must include a capital letter and a special character",
+                      value: /^\d{5}$/,
+                      message: "PIN must be a 5-digit number",
                     },
                   })}
                   type={showPassword ? "text" : "password"}
-                  id="password"
-                  placeholder="Password"
+                  id="pin"
+                  placeholder="PIN"
                   className="w-full p-2 border rounded-md"
                 />
                 <span
@@ -167,50 +179,8 @@ const Register = () => {
                   {showPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               </div>
-              {errors.password && (
-                <span className="text-red-600">{errors.password.message}</span>
-              )}
-            </div>
-
-            {/* Bank Account Number */}
-            <div>
-              <label className="block text-lg" htmlFor="bankAccountNo">
-                Bank Account Number
-              </label>
-              <input
-                {...register("bankAccountNo", { required: true })}
-                id="bankAccountNo"
-                placeholder="Bank Account Number"
-                className="w-full p-2 border rounded-md"
-              />
-              {errors.bankAccountNo && (
-                <span className="text-red-600">
-                  Bank Account Number is required
-                </span>
-              )}
-            </div>
-
-            {/* salary */}
-            <div>
-              <label className="block text-lg" htmlFor="salary">
-                Salary
-              </label>
-              <input
-                type="number"
-                {...register("salary", {
-                  required: "Salary is required",
-                  min: { value: 99, message: "Salary must be at least 99" },
-                  max: {
-                    value: 999,
-                    message: "Salary cannot be greater than 999",
-                  },
-                })}
-                id="salary"
-                placeholder="Salary"
-                className="w-full p-2 border rounded-md"
-              />
-              {errors.salary && (
-                <span className="text-red-600">{errors.salary.message}</span>
+              {errors.pin && (
+                <span className="text-red-600">{errors.pin.message}</span>
               )}
             </div>
 
@@ -227,36 +197,11 @@ const Register = () => {
                 className="w-full p-2 border rounded-md"
                 {...register("role", { required: true })}
               >
-                <option value="employee">Employee</option>
-                <option value="hr">HR</option>
+                <option value="user">User</option>
+                <option value="agent">Agent</option>
               </select>
               {errors.role && (
                 <span className="text-red-600">Role is required</span>
-              )}
-            </div>
-
-            {/* Designation */}
-            <div>
-              <label className="block text-lg" htmlFor="designation">
-                Designation
-              </label>
-              <select
-                value={watch("designation")}
-                onChange={(value) => setValue("designation", value)}
-                id="designation"
-                placeholder="Select Designation"
-                className="w-full p-2 border rounded-md"
-                {...register("designation", { required: true })}
-              >
-                <option value="Sales Assistant">Sales Assistant</option>
-                <option value="Social Media Executive">
-                  Social Media Executive
-                </option>
-                <option value="Digital Marketer">Digital Marketer</option>
-                {/* Add more options as necessary */}
-              </select>
-              {errors.designation && (
-                <span className="text-red-600">Designation is required</span>
               )}
             </div>
 
@@ -266,8 +211,8 @@ const Register = () => {
                 type="primary"
                 htmlType="submit"
               >
-                {/* Register */}
-                {loader ? <Loading /> : "Register"}
+                {/* {loader ? <Loading /> : "Register"} */}
+                Register
               </Button>
             </div>
           </form>
